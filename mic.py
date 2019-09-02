@@ -28,6 +28,7 @@ def on_message(client, userdata, message):
   global total_rows
   global total_columns
   global sample_bias
+  global sample_jump
 
   if message.topic == "display/columns":
     total_columns = int(message.payload)
@@ -36,6 +37,32 @@ def on_message(client, userdata, message):
     total_rows = int(message.payload)
     sample_bias = total_rows / 2
     print("setting total rows to "+str(total_rows))
+  elif message.topic == "display/x_ctl":
+    if message.payload == "+":
+      print "IN"
+      # zoom in by one "click"...factor of 2
+      if (sample_jump > 1):
+         sample_jump = sample_jump / 2
+         print "new x sample zoom:  "+str(sample_jump)
+      else:
+         print "already zoomed in as far as we can"
+      
+    elif message.payload == "-":
+      print "OUT"
+      # zoom out by one "click"...factor of 2
+      sample_jump = sample_jump * 2
+         
+      #saturate our sample jump so that we're always displaying the max
+      # number of displayable points
+      if (CHUNK / sample_jump) < total_columns:
+         print "Saturating sample zoom"
+         sample_jump = CHUNK/total_columns
+
+      print "setting sample jump to "+str(sample_jump)
+    else:
+        print "bad x_ctl payload"
+        print message.payload
+
   else:
     print("Unknown message on display topic:"+message.topic)
     print("Payload: "+message.payload)
