@@ -29,6 +29,7 @@ def on_message(client, userdata, message):
   global total_columns
   global sample_bias
   global sample_jump
+  global sample_scale
 
   if message.topic == "display/columns":
     total_columns = int(message.payload)
@@ -39,16 +40,15 @@ def on_message(client, userdata, message):
     print("setting total rows to "+str(total_rows))
   elif message.topic == "display/x_ctl":
     if message.payload == "+":
-      print "IN"
+      print "X IN"
       # zoom in by one "click"...factor of 2
       if (sample_jump > 1):
          sample_jump = sample_jump / 2
          print "new x sample zoom:  "+str(sample_jump)
       else:
          print "already zoomed in as far as we can"
-      
     elif message.payload == "-":
-      print "OUT"
+      print "X OUT"
       # zoom out by one "click"...factor of 2
       sample_jump = sample_jump * 2
          
@@ -62,6 +62,18 @@ def on_message(client, userdata, message):
     else:
         print "bad x_ctl payload"
         print message.payload
+
+  elif message.topic == "display/y_ctl":
+    if message.payload == "+":
+      print "Y IN"
+      # zoom in by one "click"...factor of 2
+      sample_scale = sample_scale / 2
+    elif message.payload == "-":
+      print "Y OUT"
+      # zoom out by one "click"...factor of 2
+      sample_scale = sample_scale * 2
+
+    print "new y sample zoom:  "+str(sample_scale)
 
   else:
     print("Unknown message on display topic:"+message.topic)
