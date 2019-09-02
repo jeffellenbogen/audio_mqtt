@@ -32,7 +32,8 @@ class Screen():
     self.background = None
     self.icons = []
 
-    self.screen = Image.new("RGBA",(self.total_columns,self.total_rows))
+    self.screen = Image.new("RGB",(self.total_columns,self.total_rows))
+    self.draw = ImageDraw.Draw(self.screen)
 
   ############################################
   # send_size 
@@ -42,6 +43,29 @@ class Screen():
     client.publish("display/columns", str(self.total_columns))
     client.publish("display/rows", str(self.total_rows)) 
    
+  ############################################
+  # show data 
+  ###############################################
+  def show_data(self,sound_data):
+
+    print(sound_data)
+
+    # black out the old data
+    self.draw.rectangle((0,0,self.total_columns, self.total_rows),(0,0,0))
+
+    # First iteration:  don't use display math...just assuming 64x64
+    last_x = 0
+    last_y = 32
+
+    for data_index in range(0,64):
+      new_x = last_x + 1 
+      new_y = sound_data[data_index] 
+      self.draw.line((last_x, last_y, new_x, new_y),fill=(0,0,255)) 
+      last_x = new_x
+      last_y = new_y
+
+    self.matrix.SetImage(self.screen,0,0)
+
 matrix_rows = 64
 matrix_columns = 64
 num_hor = 1
@@ -49,30 +73,9 @@ num_vert = 1
 
 display = Screen(matrix_rows, matrix_columns, num_hor, num_vert)
 
-def display_data(sound_data):
-
-  print(sound_data)
-
-'''
-    last_x = 0
-    last_y = 32
-
-    for data_index in range(0,64):
-      new_x = last_x + 1 
-      try:
-        new_y = sound_data[data_index] 
-      except:
-        err_count = err_count+1
-        print("sound data index issue"+str(err_count))
-        continue
-      draw.line((last_x, last_y, new_x, new_y),fill=blue) 
-      last_x = new_x
-      last_y = new_y
-
-    matrix.SetImage(image,0,0)
-'''
-
 def on_message(client, userdata, message):
+  global display
+
   print "Message Callback"
 
   payload = message.payload
@@ -80,7 +83,7 @@ def on_message(client, userdata, message):
   for item in payload:
     sound_data.append(ord(item)) 
 
-  display_data(sound_data) 
+  display.show_data(sound_data) 
 
 broker_address="10.0.0.17"
 client = mqtt.Client("time_display")
