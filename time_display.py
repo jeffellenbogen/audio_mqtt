@@ -53,11 +53,10 @@ class Screen():
     # black out the old data
     self.draw.rectangle((0,0,self.total_columns, self.total_rows),(0,0,0))
 
-    # First iteration:  don't use display math...just assuming 64x64
     last_x = 0
-    last_y = 32
+    last_y = self.total_rows / 2
 
-    for data_index in range(0,64):
+    for data_index in range(0,self.total_columns-1):
       new_x = last_x + 1 
       new_y = sound_data[data_index] 
       self.draw.line((last_x, last_y, new_x, new_y),fill=(0,0,255)) 

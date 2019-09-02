@@ -16,8 +16,8 @@ p = pyaudio.PyAudio()
 
 stream = p.open(format=FORMAT,channels=CHANNELS,rate=RATE,input_device_index=DEV_INDEX,input=True,output=False,frames_per_buffer=CHUNK)
  
-sample_jump = CHUNK/64
-#sample_jump = 2
+#sample_jump = CHUNK/64
+sample_jump = 2
 sample_scale = 100
 
 total_rows = 32
@@ -55,8 +55,9 @@ try:
     
     scaled_data = []
  
-    for point in range(0,CHUNK,sample_jump):
-       scaled_point = sample_bias + data_int[point]/sample_scale
+    for point in range(0,total_columns-1):
+       point_index = point*sample_jump
+       scaled_point = sample_bias + data_int[point_index]/sample_scale
        if scaled_point < 0:
           scaled_point = 0
        if scaled_point > 255:
