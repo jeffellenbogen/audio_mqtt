@@ -47,7 +47,7 @@ class Screen():
   ############################################
   # set_freq_bin_size 
   ###############################################
-  def set_freq_bin_size(self, bin_size):
+  def set_freq_bin_num_pixels(self, bin_size):
     self.num_pixels_per_freq_bin = int(bin_size)
     self.num_freq_bins = self.total_columns / self.num_pixels_per_freq_bin 
     print "Set freq bin size to "+bin_size+" pixels"
@@ -149,12 +149,12 @@ def on_message(client, userdata, message):
     for item in message.payload:
        sound_data.append(ord(item))
     display.show_freq_data(sound_data)
-  elif message.topic == "display/freq_bin_size":
-    display.set_freq_bin_size(message.payload)
+  elif message.topic == "display/freq_bin_num_pixels":
+    display.set_freq_bin_num_pixels(message.payload)
 
 #broker_address="10.0.0.17"
 broker_address="raspberrypi_glenn"
-client = mqtt.Client("time_display")
+client = mqtt.Client("dual_display")
 client.on_message=on_message
 try:
   client.connect(broker_address)
@@ -164,7 +164,7 @@ except:
 
 client.loop_start()
 client.subscribe("audio/#")
-client.subscribe("display/freq_bin_size")
+client.subscribe("display/freq_bin_num_pixels")
 
 display.send_size(client)
 
