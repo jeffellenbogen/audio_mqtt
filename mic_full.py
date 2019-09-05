@@ -27,7 +27,7 @@ stream = p.open(format=FORMAT,channels=CHANNELS,rate=RATE,input_device_index=DEV
 sample_jump = 2
 sample_scale = 100
 
-freq_scale = 20 
+freq_scale = 16 
 num_freq_bins = 100 
 freq_points_per_bin = 4
 
@@ -43,6 +43,7 @@ def on_message(client, userdata, message):
   global sample_scale
   global num_freq_bins
   global freq_points_per_bin
+  global freq_scale
 
   if message.topic == "display/columns":
     total_columns = int(message.payload)
@@ -87,6 +88,18 @@ def on_message(client, userdata, message):
       sample_scale = sample_scale * 2
 
     print "new y sample zoom:  "+str(sample_scale)
+
+  elif message.topic == "display/freq/y_ctl":
+    if message.payload == "+":
+      print "Y IN (freq)"
+      # zoom in by one "click"...factor of 2
+      freq_scale = freq_scale / 2
+    elif message.payload == "-":
+      print "Y OUT (freq)"
+      # zoom out by one "click"...factor of 2
+      freq_scale = freq_scale * 2
+
+    print "new freq scale:  "+str(freq_scale)
 
   elif message.topic == "display/freq/num_bins":
     num_freq_bins = int(message.payload) 
