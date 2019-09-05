@@ -35,6 +35,13 @@ class Screen():
     self.screen = Image.new("RGB",(self.total_columns,self.total_rows))
     self.draw = ImageDraw.Draw(self.screen)
 
+    # default frequency bin params:  one pixel bins, no averaging, mono-color
+    self.num_freq_bins = self.total_columns
+    self.num_freq_points_per_bin = 1
+    self.num_pixels_per_freq_bin = 1
+    self.freq_display_style = "instant"
+    self.freq_color="mono" 
+    
   ############################################
   # send_size 
   #   broadcasts the display size 
@@ -72,22 +79,37 @@ class Screen():
   ###############################################
   def show_freq_data(self,sound_data):
 
+    simple_freq_color = (0,0,255)
+
     #print(sound_data)
 
     # black out the old data
     top_freq_row = self.total_rows/2 
     self.draw.rectangle((0,top_freq_row,self.total_columns, self.total_rows),(0,0,0))
 
-    # first iteration:  each data point is a 1-pixel rectangle (line?) going up.
-    # Note the bad dependency here....I need more data than columns...
-    for x in range(0,self.total_columns):
+    # next iteration:  use my freq params, but only test the "one point per bin"
+    # Note still have dependency on needing mic side to send enough data...
+    #   we're not sending freq params over MQTT yet.
+    for x in range(0,self.num_freq_bins):
+      
+      # The mic side does frequency bin averaging...don't need to worry about
+      # that here.
       y = self.total_rows - sound_data[x]
       if y < top_freq_row:  
         y = top_freq_row 
       if y > self.total_rows:
         y = self.total_rows  
+      
+      # two modes...instant and decay
+      if self.freq_display_style == "instant":
+        self.draw.rectangle((x,y,x+self.num_pixels_per_freq_bin-1,self.total_rows),outline=(0,0,255))
 
-      self.draw.line((x, self.total_columns, x, y),fill=(0,0,255)) 
+      elif self.freq_display_style == "decay":
+        print "Decay currently unimplemented"
+        return
+      else:
+        print "Unknown frequency display style: "+self.freq_display_style
+        return
 
     self.matrix.SetImage(self.screen,0,0)
 
