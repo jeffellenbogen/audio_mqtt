@@ -39,10 +39,8 @@ class Screen():
     self.num_pixels_per_freq_bin = 3
     self.num_freq_bins = self.total_columns / self.num_pixels_per_freq_bin 
     self.freq_display_style = "instant"
-    self.freq_color="mono" 
     
-    # I don't think we care about this...the mic side should deal with it.  
-    self.num_freq_points_per_bin = 1
+    self.set_color_palette()
 
   ############################################
   # set_client 
@@ -51,6 +49,40 @@ class Screen():
     self.client = client
 
   ############################################
+  # set_color_palette
+  ###############################################
+  def set_color_palette(self):
+    # we want our palette to go from blue to green to red across the screen.
+    # this will be dependent on the number for frequency bins
+
+    # start with an empty palette
+    self.palette = []
+
+    # Figure out the color "step size" based on the number of bins.
+    # Deal with the fact our num_freq_bins may be odd (and therefore not
+    # divisible by 2)
+    second_half_num_bins = int(self.num_freq_bins / 2)
+    first_half_num_bins = self.num_freq_bins - second_half_num_bins
+
+    #print "first half: "+str(first_half_num_bins)
+    #print "second half: "+str(second_half_num_bins)
+
+    # The first half of the palette walks from blue (0,0,255) to green (0,255,0)
+    step_size = 255 / (first_half_num_bins - 1)
+    for step in range (0, first_half_num_bins):
+      temp_color = (0, int(step_size * step), int(255 - (step_size * step)))
+      #print temp_color
+      self.palette.append(temp_color)
+  
+    # the second half walks from green to red...but we should already have 
+    # had a mostly green one, so start one step towards red.
+    step_size = 255 / (second_half_num_bins)
+    for step in range (1, second_half_num_bins+1):
+      temp_color = (int(step_size * step), int(255-(step_size * step)),0)
+      #print temp_color
+      self.palette.append(temp_color)
+    
+  ############################################
   # set_freq_bin_num_pixels
   ###############################################
   def set_freq_bin_num_pixels(self, bin_size):
@@ -58,6 +90,7 @@ class Screen():
     self.num_freq_bins = self.total_columns / self.num_pixels_per_freq_bin 
     print "Set freq bin size to "+bin_size+" pixels"
     self.client.publish("display/freq/num_bins", str(self.num_freq_bins))
+    self.set_color_palette()
 
   ############################################
   # send_size 
@@ -97,9 +130,7 @@ class Screen():
   ###############################################
   def show_freq_data(self,sound_data):
 
-    simple_freq_color = (0,0,255)
-
-    print(sound_data)
+    #print(sound_data)
 
     # black out the old data
     top_freq_row = self.total_rows/2 
@@ -120,8 +151,8 @@ class Screen():
         x_start = x * self.num_pixels_per_freq_bin
         x_stop = x_start + self.num_pixels_per_freq_bin - 1
 
-        #self.draw.rectangle((x*self.num_pixels_per_freq_bin,y,x+self.num_pixels_per_freq_bin-1,self.total_rows),outline=(0,0,255))
-        self.draw.rectangle((x_start,y,x_stop,self.total_rows),outline=(0,0,255))
+        color = self.palette[x]
+        self.draw.rectangle((x_start,y,x_stop,self.total_rows),outline=color)
 
       elif self.freq_display_style == "decay":
         print "Decay currently unimplemented"
@@ -173,6 +204,7 @@ client.subscribe("display/freq/#")
 
 display.set_client(client)
 display.send_size()
+
 
 try:
   print("Press CTRL-C to stop")
