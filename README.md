@@ -41,7 +41,7 @@ The `display/time/x_ctl` topic deals with the time (or x) dimension.  At the min
 ### Display side
 The main parameter for frequency on the display side is the number of pixels per frequency "bin".  We can set this through MQTT with the topic `display/freq/pixels_per_bin`
 
-Note that the number of frequency bins displayed is the number of total rows divided by the bin size in pixels.  We'll send this info over to the mic as `display/freq/num_bins`
+Note that the number of frequency bins displayed is the number of total rows divided by the bin size in pixels.  We'll send this info over to the mic as `display/freq/num_bins`.  This should only be sent by the display program.
 ### Microphone side
 On the Mic side, we start by doing a raw FFT of our input samples.  We'll only send over the number of frequency bins that the display requests.  
 
