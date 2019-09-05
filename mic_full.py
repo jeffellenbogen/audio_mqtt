@@ -27,7 +27,7 @@ stream = p.open(format=FORMAT,channels=CHANNELS,rate=RATE,input_device_index=DEV
 sample_jump = 2
 sample_scale = 100
 
-freq_scale = 4 
+freq_scale = 20 
 num_freq_bins = 100 
 freq_points_per_bin = 4
 
