@@ -36,9 +36,9 @@ class Screen():
     self.draw = ImageDraw.Draw(self.screen)
 
     # default frequency bin params:  one pixel bins, no averaging, mono-color
-    self.num_freq_bins = self.total_columns
+    self.num_pixels_per_freq_bin = 3
+    self.num_freq_bins = self.total_columns / self.num_pixels_per_freq_bin 
     self.num_freq_points_per_bin = 1
-    self.num_pixels_per_freq_bin = 1
     self.freq_display_style = "instant"
     self.freq_color="mono" 
     
@@ -102,7 +102,11 @@ class Screen():
       
       # two modes...instant and decay
       if self.freq_display_style == "instant":
-        self.draw.rectangle((x,y,x+self.num_pixels_per_freq_bin-1,self.total_rows),outline=(0,0,255))
+        x_start = x * self.num_pixels_per_freq_bin
+        x_stop = x_start + self.num_pixels_per_freq_bin - 1
+
+        #self.draw.rectangle((x*self.num_pixels_per_freq_bin,y,x+self.num_pixels_per_freq_bin-1,self.total_rows),outline=(0,0,255))
+        self.draw.rectangle((x_start,y,x_stop,self.total_rows),outline=(0,0,255))
 
       elif self.freq_display_style == "decay":
         print "Decay currently unimplemented"
