@@ -41,6 +41,7 @@ def on_message(client, userdata, message):
   global sample_bias
   global sample_jump
   global sample_scale
+  global num_freq_bins
 
   if message.topic == "display/columns":
     total_columns = int(message.payload)
@@ -85,6 +86,10 @@ def on_message(client, userdata, message):
       sample_scale = sample_scale * 2
 
     print "new y sample zoom:  "+str(sample_scale)
+
+  elif message.topic == "display/freq/num_bins":
+    num_freq_bins = int(message.payload) 
+    print "Setting num_freq_bins to "+message.payload
 
   else:
     print("Unknown message on display topic:"+message.topic)

@@ -45,20 +45,28 @@ class Screen():
     self.num_freq_points_per_bin = 1
 
   ############################################
+  # set_client 
+  ###############################################
+  def set_client(self, client):
+    self.client = client
+
+  ############################################
   # set_freq_bin_size 
   ###############################################
   def set_freq_bin_num_pixels(self, bin_size):
     self.num_pixels_per_freq_bin = int(bin_size)
     self.num_freq_bins = self.total_columns / self.num_pixels_per_freq_bin 
     print "Set freq bin size to "+bin_size+" pixels"
+    self.client.publish("display/freq/num_bins", str(self.num_freq_bins))
 
   ############################################
   # send_size 
   #   broadcasts the display size 
   ###############################################
-  def send_size(self, client):
-    client.publish("display/columns", str(self.total_columns))
-    client.publish("display/rows", str(self.total_rows/2)) 
+  def send_size(self):
+    self.client.publish("display/columns", str(self.total_columns))
+    self.client.publish("display/rows", str(self.total_rows/2)) 
+    self.client.publish("display/freq/num_bins", str(self.num_freq_bins))
    
   ############################################
   # show time data 
@@ -91,7 +99,7 @@ class Screen():
 
     simple_freq_color = (0,0,255)
 
-    #print(sound_data)
+    print(sound_data)
 
     # black out the old data
     top_freq_row = self.total_rows/2 
@@ -166,7 +174,8 @@ client.loop_start()
 client.subscribe("audio/#")
 client.subscribe("display/freq_bin_num_pixels")
 
-display.send_size(client)
+display.set_client(client)
+display.send_size()
 
 try:
   print("Press CTRL-C to stop")
