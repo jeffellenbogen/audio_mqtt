@@ -93,7 +93,12 @@ def on_message(client, userdata, message):
 broker_address="raspberrypi_glenn"
 client = mqtt.Client("Microphone")
 client.on_message=on_message
-client.connect(broker_address)
+try:
+  client.connect(broker_address)
+except:
+  print "Unable to connect to MQTT broker"
+  exit(0)
+
 client.loop_start()
 client.subscribe("display/#")
 
