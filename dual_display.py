@@ -38,10 +38,20 @@ class Screen():
     # default frequency bin params:  one pixel bins, no averaging, mono-color
     self.num_pixels_per_freq_bin = 3
     self.num_freq_bins = self.total_columns / self.num_pixels_per_freq_bin 
-    self.num_freq_points_per_bin = 1
     self.freq_display_style = "instant"
     self.freq_color="mono" 
     
+    # I don't think we care about this...the mic side should deal with it.  
+    self.num_freq_points_per_bin = 1
+
+  ############################################
+  # set_freq_bin_size 
+  ###############################################
+  def set_freq_bin_size(self, bin_size):
+    self.num_pixels_per_freq_bin = int(bin_size)
+    self.num_freq_bins = self.total_columns / self.num_pixels_per_freq_bin 
+    print "Set freq bin size to "+bin_size+" pixels"
+
   ############################################
   # send_size 
   #   broadcasts the display size 
@@ -129,15 +139,18 @@ def on_message(client, userdata, message):
 
   #print "Message Callback"
 
-  payload = message.payload
-  sound_data = []
-  for item in payload:
-    sound_data.append(ord(item)) 
-
   if message.topic == "audio/time_samples":
+    sound_data = []
+    for item in message.payload:
+       sound_data.append(ord(item))
     display.show_time_data(sound_data) 
   elif message.topic == "audio/freq_data":
+    sound_data = []
+    for item in message.payload:
+       sound_data.append(ord(item))
     display.show_freq_data(sound_data)
+  elif message.topic == "display/freq_bin_size":
+    display.set_freq_bin_size(message.payload)
 
 #broker_address="10.0.0.17"
 broker_address="raspberrypi_glenn"
@@ -146,6 +159,7 @@ client.on_message=on_message
 client.connect(broker_address)
 client.loop_start()
 client.subscribe("audio/#")
+client.subscribe("display/freq_bin_size")
 
 display.send_size(client)
 
