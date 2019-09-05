@@ -29,6 +29,7 @@ sample_scale = 100
 
 freq_scale = 4 
 num_freq_bins = 100 
+freq_points_per_bin = 4
 
 total_rows = 32
 total_columns = 32
@@ -133,17 +134,27 @@ try:
     freq_int = Pxx.astype(int)
      
     # now pack them into our sending stream.  
+    # two concepts: 
+    #   - point refers to a point in our FFT.  One FFT bin.
+    #   - bin refers to a frequency bin...each bin is an average of 
+    #     freq_points_per_bin FFT points.
     scaled_freq_data = []
     point_index = 0
-    for point in range(0, num_freq_bins-1):
-      scaled_point = freq_int[point_index]/freq_scale
+    for bin in range(0, num_freq_bins):
+      scaled_point = 0
+
+      for point in range(0,freq_points_per_bin):
+        scaled_point = scaled_point + freq_int[point_index]
+        point_index += 1
+ 
+      scaled_point = scaled_point/freq_scale
+      scaled_point = scaled_point / freq_points_per_bin
+      scaled_point = int(scaled_point)
       if scaled_point < 0:
          scaled_point = 0
       if scaled_point > 255:
          scaled_point = 255
       scaled_freq_data.append(scaled_point)
-
-      point_index += 1
 
     packed_data = bytearray(scaled_freq_data)
     client.publish("audio/freq_data", packed_data)
