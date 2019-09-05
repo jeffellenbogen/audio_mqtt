@@ -39,4 +39,4 @@ Note that the number of frequency bins displayed is the number of total rows div
 ### Microphone side
 On the Mic side, we start by doing a raw FFT of our input samples.  We'll only send over the number of frequency bins that the display requests.  
 
-Inside each frequency bin, we can combine FFT points to make the bins "wider" (in frequency, not in pixels).  This can be controlled with `display/freq_points_per_bin`...also currently unimplemented.
+Inside each frequency bin, we can combine FFT points to make the bins "wider" (in frequency, not in pixels).  This can be controlled with `display/freq/num_pts_per_bin`.
