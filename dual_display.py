@@ -105,14 +105,11 @@ class Screen():
     top_freq_row = self.total_rows/2 
     self.draw.rectangle((0,top_freq_row,self.total_columns, self.total_rows),(0,0,0))
 
-    # next iteration:  use my freq params, but only test the "one point per bin"
-    # Note still have dependency on needing mic side to send enough data...
-    #   we're not sending freq params over MQTT yet.
     for x in range(0,self.num_freq_bins):
       
       # The mic side does frequency bin averaging...don't need to worry about
       # that here.
-      y = self.total_rows - sound_data[x]
+      y = self.total_rows - sound_data[x] - 1
       if y < top_freq_row:  
         y = top_freq_row 
       if y > self.total_rows:
