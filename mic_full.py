@@ -42,6 +42,7 @@ def on_message(client, userdata, message):
   global sample_jump
   global sample_scale
   global num_freq_bins
+  global freq_points_per_bin
 
   if message.topic == "display/columns":
     total_columns = int(message.payload)
@@ -90,6 +91,10 @@ def on_message(client, userdata, message):
   elif message.topic == "display/freq/num_bins":
     num_freq_bins = int(message.payload) 
     print "Setting num_freq_bins to "+message.payload
+
+  elif message.topic == "display/freq/num_pts_per_bin":
+    freq_points_per_bin = int(message.payload)
+    print "Setting freq_points_per_bin to "+message.payload
 
   else:
     print("Unknown message on display topic:"+message.topic)
