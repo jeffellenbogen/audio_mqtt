@@ -48,7 +48,7 @@ def on_message(client, userdata, message):
     total_rows = int(message.payload)
     sample_bias = total_rows / 2
     print("setting total rows (half display) to "+str(total_rows))
-  elif message.topic == "display/x_ctl":
+  elif message.topic == "display/time/x_ctl":
     if message.payload == "+":
       print "X IN"
       # zoom in by one "click"...factor of 2
@@ -73,7 +73,7 @@ def on_message(client, userdata, message):
         print "bad x_ctl payload"
         print message.payload
 
-  elif message.topic == "display/y_ctl":
+  elif message.topic == "display/time/y_ctl":
     if message.payload == "+":
       print "Y IN"
       # zoom in by one "click"...factor of 2
