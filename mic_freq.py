@@ -1,7 +1,14 @@
-# First iteration:  just send the 64 samples with MQTT
+# Some freq notes:
+#   - 1 KHz is about the 24th bin of raw FFT data.  
+#     So, 100 frequency points would give me about 4 KHz of sound data.
+#   - I'm gonna start by sending it raw and have the other side just do 
+#       Bars at the right place...that'll let me confirm we're linear.
+#   - Later, I'm going to average the bins.  Start by averaging them 
+#     on this side before sending them over...
 
 import pyaudio
 import struct
+import numpy as np
 
 import paho.mqtt.client as mqtt
 import time
@@ -19,6 +26,9 @@ stream = p.open(format=FORMAT,channels=CHANNELS,rate=RATE,input_device_index=DEV
 #sample_jump = CHUNK/64
 sample_jump = 2
 sample_scale = 100
+
+freq_scale = 4 
+num_freq_bins = 100 
 
 total_rows = 32
 total_columns = 32
@@ -92,7 +102,8 @@ try:
   while (True):
     data = stream.read(CHUNK,exception_on_overflow = False)
     data_int = struct.unpack(str(CHUNK) +'h', data)  
-    
+
+    '''        
     scaled_data = []
  
     for point in range(0,total_columns-1):
@@ -106,6 +117,36 @@ try:
 
     packed_data = bytearray(scaled_data)
     client.publish("audio/time_samples",packed_data) 
+    '''
+
+    # do numpy's fft
+    Y_k = np.fft.fft(data_int)[0:int(CHUNK/2)]/CHUNK
+
+    # only grab single sided spectrum
+    Y_k[1:] = 2*Y_k[1:]
+
+    # Calc magnitude, truncating to integers
+    Pxx = np.abs(Y_k)
+    freq_int = Pxx.astype(int)
+     
+    # now pack them into our sending stream.  
+    scaled_freq_data = []
+    point_index = 0
+    for point in range(0, num_freq_bins-1):
+      scaled_point = freq_int[point_index]/freq_scale
+      if scaled_point < 0:
+         scaled_point = 0
+      if scaled_point > 255:
+         scaled_point = 255
+      scaled_freq_data.append(scaled_point)
+
+      point_index += 1
+
+    packed_data = bytearray(scaled_freq_data)
+    client.publish("audio/freq_data", packed_data)
+
+
+
     #print("write done")
     #time.sleep(.1)
     

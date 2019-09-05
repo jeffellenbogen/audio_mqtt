@@ -44,9 +44,9 @@ class Screen():
     client.publish("display/rows", str(self.total_rows)) 
    
   ############################################
-  # show data 
+  # show time data 
   ###############################################
-  def show_data(self,sound_data):
+  def show_time_data(self,sound_data):
 
     #print(sound_data)
 
@@ -62,6 +62,29 @@ class Screen():
       self.draw.line((last_x, last_y, new_x, new_y),fill=(0,0,255)) 
       last_x = new_x
       last_y = new_y
+
+    self.matrix.SetImage(self.screen,0,0)
+
+  ############################################
+  # show freq data 
+  ###############################################
+  def show_freq_data(self,sound_data):
+
+    #print(sound_data)
+
+    # black out the old data
+    self.draw.rectangle((0,0,self.total_columns, self.total_rows),(0,0,0))
+
+    # first iteration:  each data point is a 1-pixel rectangle (line?) going up.
+    # Note the bad dependency here....I need more data than columns...
+    for x in range(0,self.total_columns):
+      y = self.total_columns - sound_data[x]
+      if y < 0:  
+        y = 0
+      if y > 63:
+        y = 63  
+
+      self.draw.line((x, self.total_columns, x, y),fill=(0,0,255)) 
 
     self.matrix.SetImage(self.screen,0,0)
 
@@ -82,7 +105,10 @@ def on_message(client, userdata, message):
   for item in payload:
     sound_data.append(ord(item)) 
 
-  display.show_data(sound_data) 
+  if message.topic == "audio/time_samples":
+    display.show_data(sound_data) 
+  elif message.topic == "audio/freq_data":
+    display.show_freq_data(sound_data)
 
 #broker_address="10.0.0.17"
 broker_address="raspberrypi_glenn"
@@ -90,7 +116,7 @@ client = mqtt.Client("time_display")
 client.on_message=on_message
 client.connect(broker_address)
 client.loop_start()
-client.subscribe("audio/time_samples")
+client.subscribe("audio/freq_data")
 
 display.send_size(client)
 
