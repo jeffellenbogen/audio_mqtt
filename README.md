@@ -33,9 +33,9 @@ num_vert = 1
 ```
 This will then set the appropriate variables inside of our Screen class.  Note that while we send the display info over to the microphone, we do not use that info for frequency display.
 
-The other parameter on the display side is the number of pixels per frequency "bin".  We can set this through MQTT with the topic `display/freq_bin_size`
+The other parameter on the display side is the number of pixels per frequency "bin".  We can set this through MQTT with the topic `display/freq/bin_num_pixels`
 
-Note that the number of frequency bins displayed is the number of total rows divided by the bin size in pixels.  We'll send this info over to the mic as `display/num_freq_bins`...but this is currently unimplemented.
+Note that the number of frequency bins displayed is the number of total rows divided by the bin size in pixels.  We'll send this info over to the mic as `display/freq/num_bins`
 ### Microphone side
 On the Mic side, we start by doing a raw FFT of our input samples.  We'll only send over the number of frequency bins that the display requests.  
 
