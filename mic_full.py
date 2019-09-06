@@ -114,7 +114,7 @@ def on_message(client, userdata, message):
     print("Payload: "+message.payload)
 
 #broker_address="10.0.0.17"
-broker_address="raspberrypi_glenn"
+broker_address="makerlabPi1"
 client = mqtt.Client("Microphone")
 client.on_message=on_message
 try:
