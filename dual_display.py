@@ -173,7 +173,7 @@ display = Screen(matrix_rows, matrix_columns, num_hor, num_vert)
 def on_message(client, userdata, message):
   global display
 
-  #print "Message Callback"
+  print "Message Callback"
 
   if message.topic == "audio/time_samples":
     sound_data = []
