@@ -41,12 +41,19 @@ class Screen():
     self.freq_display_style = "instant"
     
     self.set_color_palette()
-
+    self.color = 150
   ############################################
   # set_client 
   ###############################################
   def set_client(self, client):
     self.client = client
+
+  ############################################
+  # set_time_color 
+  ###############################################
+  def set_time_color(self, color):
+    self.color = color
+
 
   ############################################
   # set_color_palette
@@ -116,10 +123,12 @@ class Screen():
     last_x = 0
     last_y = self.total_rows / 4
 
+    time_color ="hsl({}, 100%, 50%)".format(self.color) 
+
     for data_index in range(0,self.total_columns-1):
       new_x = last_x + 1 
       new_y = sound_data[data_index] 
-      self.draw.line((last_x, last_y, new_x, new_y),fill=(0,0,255)) 
+      self.draw.line((last_x, last_y, new_x, new_y),fill=time_color) 
       last_x = new_x
       last_y = new_y
 
@@ -189,6 +198,7 @@ def on_message(client, userdata, message):
     display.set_freq_bin_num_pixels(message.payload)
   elif message.topic == "display/time/color":
     print "color change "+message.payload
+    display.set_time_color(int(message.payload))
   else:
     print "unknown topic: "+message.topic
 
