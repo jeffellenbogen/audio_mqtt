@@ -189,6 +189,8 @@ def on_message(client, userdata, message):
     display.set_freq_bin_num_pixels(message.payload)
   elif message.topic == "display/time/color":
     print "color change "+message.payload
+  else:
+    print "unknown topic: "+message.topic
 
 #broker_address="10.0.0.17"
 broker_address="makerlabPi1"
