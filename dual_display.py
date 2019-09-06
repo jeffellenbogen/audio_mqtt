@@ -52,7 +52,7 @@ class Screen():
   # set_time_color 
   ###############################################
   def set_time_color(self, color):
-    self.color = color
+    self.color = color%360 #hsl uses colors from 0-360
 
 
   ############################################
@@ -182,7 +182,7 @@ display = Screen(matrix_rows, matrix_columns, num_hor, num_vert)
 def on_message(client, userdata, message):
   global display
 
-  print "Message Callback"
+  #print "Message Callback"
 
   if message.topic == "audio/time_samples":
     sound_data = []
