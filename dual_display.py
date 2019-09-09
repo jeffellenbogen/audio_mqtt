@@ -208,8 +208,8 @@ def on_message(client, userdata, message):
     print "color change "+message.payload
     display.set_time_color(int(message.payload))
   elif message.topic == "display/time/y_spread":
-    print "y_spread change"+message.payload
-    display.set_y_spread(message.payload)
+    print "y_spread change "+message.payload
+    display.set_y_spread(int(message.payload))
   else:
     print "unknown topic: "+message.topic
 
