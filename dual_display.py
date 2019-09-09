@@ -124,11 +124,12 @@ class Screen():
     last_y = self.total_rows / 4
 
     time_color ="hsl({}, 100%, 50%)".format(self.color) 
-
+    y_spread = 1
+    
     for data_index in range(0,self.total_columns-1):
       new_x = last_x + 1 
       new_y = sound_data[data_index] 
-      self.draw.line((last_x, last_y, new_x, new_y),fill=time_color) 
+      self.draw.line((last_x, last_y-y_spread, new_x, new_y+y_spread),fill=time_color) 
       last_x = new_x
       last_y = new_y
 
