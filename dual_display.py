@@ -135,7 +135,7 @@ class Screen():
     time_color ="hsl({}, 100%, 50%)".format(self.color) 
     
 
-    for data_index in range(0,self.total_columns-1):
+    for data_index in range(0,self.total_columns):
       new_x = last_x + 1 
       new_y = sound_data[data_index] 
       self.draw.line((last_x, last_y - self.y_spread, last_x, new_y + self.y_spread),fill=time_color) 
