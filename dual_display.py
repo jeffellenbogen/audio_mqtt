@@ -42,6 +42,7 @@ class Screen():
     
     self.set_color_palette()
     self.color = 150
+    self.y_spread = 1
   ############################################
   # set_client 
   ###############################################
@@ -53,6 +54,12 @@ class Screen():
   ###############################################
   def set_time_color(self, color):
     self.color = color%360 #hsl uses colors from 0-360
+
+  ############################################
+  # set_y_spread
+  ###############################################
+  def set_y_spread(self, y_thickness):
+    self.y_spread = y_thickness 
 
 
   ############################################
@@ -124,12 +131,12 @@ class Screen():
     last_y = self.total_rows / 4
 
     time_color ="hsl({}, 100%, 50%)".format(self.color) 
-    y_spread = 1
     
+
     for data_index in range(0,self.total_columns-1):
       new_x = last_x + 1 
       new_y = sound_data[data_index] 
-      self.draw.line((last_x, last_y-y_spread, new_x, new_y+y_spread),fill=time_color) 
+      self.draw.line((last_x, last_y-self.y_spread, new_x, new_y+self.y_spread),fill=time_color) 
       last_x = new_x
       last_y = new_y
 
@@ -200,6 +207,9 @@ def on_message(client, userdata, message):
   elif message.topic == "display/time/color":
     print "color change "+message.payload
     display.set_time_color(int(message.payload))
+   elif message.topic == "display/time/y_spread":
+    print "y_spread change"+message.payload
+    display.set_y_spread(message.payload)
   else:
     print "unknown topic: "+message.topic
 
@@ -217,6 +227,7 @@ client.loop_start()
 client.subscribe("audio/#")
 client.subscribe("display/freq/#")
 client.subscribe("display/time/color")
+client.subscribe("display/time/y_spread")
 
 display.set_client(client)
 display.send_size()
