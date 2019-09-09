@@ -207,7 +207,7 @@ def on_message(client, userdata, message):
   elif message.topic == "display/time/color":
     print "color change "+message.payload
     display.set_time_color(int(message.payload))
-   elif message.topic == "display/time/y_spread":
+  elif message.topic == "display/time/y_spread":
     print "y_spread change"+message.payload
     display.set_y_spread(message.payload)
   else:
