@@ -42,7 +42,7 @@ class Screen():
     
     self.set_color_palette()
     self.color = 150
-    self.y_spread = 2
+    self.y_spread = 0
   ############################################
   # set_client 
   ###############################################
