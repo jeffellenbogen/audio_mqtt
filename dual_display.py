@@ -53,13 +53,15 @@ class Screen():
   # set_time_color 
   ###############################################
   def set_time_color(self, color):
-    self.color = color%360 #hsl uses colors from 0-360
+    if color >= 0 or color <= 360:
+      self.color = color
 
   ############################################
   # set_y_spread
   ###############################################
   def set_y_spread(self, y_thickness):
-    self.y_spread = y_thickness 
+    if y_thickness >= 0 or y_thickness<=4:
+      self.y_spread = y_thickness 
 
 
   ############################################
