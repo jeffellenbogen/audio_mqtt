@@ -53,14 +53,14 @@ class Screen():
   # set_time_color 
   ###############################################
   def set_time_color(self, color):
-    if color >= 0 or color <= 360:
+    if color >= 0 and color <= 360:
       self.color = color
 
   ############################################
   # set_y_spread
   ###############################################
   def set_y_spread(self, y_thickness):
-    if y_thickness >= 0 or y_thickness<=4:
+    if y_thickness >= 0 and y_thickness<=4:
       self.y_spread = y_thickness 
 
 
