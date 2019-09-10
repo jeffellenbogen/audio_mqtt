@@ -41,12 +41,28 @@ class Screen():
     self.freq_display_style = "instant"
     
     self.set_color_palette()
-
+    self.color = 150
+    self.y_spread = 0
   ############################################
   # set_client 
   ###############################################
   def set_client(self, client):
     self.client = client
+
+  ############################################
+  # set_time_color 
+  ###############################################
+  def set_time_color(self, color):
+    if color >= 0 and color <= 360:
+      self.color = color
+
+  ############################################
+  # set_y_spread
+  ###############################################
+  def set_y_spread(self, y_thickness):
+    if y_thickness >= 0 and y_thickness<=4:
+      self.y_spread = y_thickness 
+
 
   ############################################
   # set_color_palette
@@ -116,10 +132,14 @@ class Screen():
     last_x = 0
     last_y = self.total_rows / 4
 
+    time_color ="hsl({}, 100%, 50%)".format(self.color) 
+    
+
     for data_index in range(0,self.total_columns-1):
       new_x = last_x + 1 
       new_y = sound_data[data_index] 
-      self.draw.line((last_x, last_y, new_x, new_y),fill=(0,0,255)) 
+      #self.draw.line((last_x, last_y - self.y_spread, last_x, last_y + self.y_spread),fill=time_color) 
+      self.draw.line((last_x, last_y, new_x, new_y + self.y_spread),fill=time_color) 
       last_x = new_x
       last_y = new_y
 
@@ -163,10 +183,10 @@ class Screen():
 
     self.matrix.SetImage(self.screen,0,0)
 
-matrix_rows = 64
-matrix_columns = 64
-num_hor = 1
-num_vert = 1
+matrix_rows = 32
+matrix_columns = 32
+num_hor = 5
+num_vert = 3
 
 display = Screen(matrix_rows, matrix_columns, num_hor, num_vert)
 
@@ -187,9 +207,17 @@ def on_message(client, userdata, message):
     display.show_freq_data(sound_data)
   elif message.topic == "display/freq/pixels_per_bin":
     display.set_freq_bin_num_pixels(message.payload)
+  elif message.topic == "display/time/color":
+    print "color change "+message.payload
+    display.set_time_color(int(message.payload))
+  elif message.topic == "display/time/y_spread":
+    print "y_spread change "+message.payload
+    display.set_y_spread(int(message.payload))
+  else:
+    print "unknown topic: "+message.topic
 
 #broker_address="10.0.0.17"
-broker_address="raspberrypi_glenn"
+broker_address="makerlabPi1"
 client = mqtt.Client("dual_display")
 client.on_message=on_message
 try:
@@ -201,6 +229,8 @@ except:
 client.loop_start()
 client.subscribe("audio/#")
 client.subscribe("display/freq/#")
+client.subscribe("display/time/color")
+client.subscribe("display/time/y_spread")
 
 display.set_client(client)
 display.send_size()
