@@ -125,7 +125,7 @@ except:
 
 client.loop_start()
 client.subscribe("display/#")
-client.publish("display/get_size","this space left blank")
+client.publish("display/get_size","")
 
 try:
   print("Hit ctl-c to exit")
