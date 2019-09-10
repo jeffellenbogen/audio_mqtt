@@ -4,11 +4,11 @@ This repo contains the code to visualize sound data.  There are two sides:
 * mic_full.py - the microphone program which samples the sound over USB
 * dual_display.py - the display program which uses the RGB matrix to display both time and frequency info for the sampled audio signal.
 
+Note these two sides don't necessarily need to be running on the same pi.
+
 To make these work, you need to install Mosquitto (see my notes at https://github.com/gsalaman/mqtt_explore).
 
-You'll need to edit the various files to point at the Mosquitto server you've set up.  Right now, they're hardcoded to my pi.
-
-Note those files don't necessarily need to be on the same pi.
+By default, MQTT is pointing at the mosquitto server on localhost.  If you want it to point somewhere else, make a "broker.conf" file that contains only one line: the desired hostname or ip address.  
 
 ## Time scaling notes
 ### Display side
