@@ -233,7 +233,7 @@ except:
 
 client.loop_start()
 client.subscribe("audio/#")
-client.subscribe("display/freq/#")
+client.subscribe("display/freq/pixels_per_bin")
 client.subscribe("display/get_size")
 client.subscribe("display/time/color")
 client.subscribe("display/time/y_spread")

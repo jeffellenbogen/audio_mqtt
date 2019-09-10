@@ -125,7 +125,10 @@ except:
   exit(0)
 
 client.loop_start()
-client.subscribe("display/#")
+client.subscribe("display/columns")
+client.subscribe("display/rows")
+client.subscribe("display/time/#")
+client.subscribe("display/freq/#")
 client.publish("display/get_size","")
 
 try:
