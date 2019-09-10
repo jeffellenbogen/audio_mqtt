@@ -113,8 +113,8 @@ def on_message(client, userdata, message):
     print("Unknown message on display topic:"+message.topic)
     print("Payload: "+message.payload)
 
-#broker_address="10.0.0.17"
-broker_address="raspberrypi_glenn"
+broker_address="10.0.0.17"
+#broker_address="makerlabPi1"
 client = mqtt.Client("Microphone")
 client.on_message=on_message
 try:
@@ -125,6 +125,7 @@ except:
 
 client.loop_start()
 client.subscribe("display/#")
+client.publish("display/get_size","this space left blank")
 
 try:
   print("Hit ctl-c to exit")

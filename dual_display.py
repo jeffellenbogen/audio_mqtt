@@ -97,6 +97,7 @@ class Screen():
   #   broadcasts the display size 
   ###############################################
   def send_size(self):
+    print "Sending Display Size" 
     self.client.publish("display/columns", str(self.total_columns))
     self.client.publish("display/rows", str(self.total_rows/2)) 
     self.client.publish("display/freq/num_bins", str(self.num_freq_bins))
@@ -187,9 +188,11 @@ def on_message(client, userdata, message):
     display.show_freq_data(sound_data)
   elif message.topic == "display/freq/pixels_per_bin":
     display.set_freq_bin_num_pixels(message.payload)
+  elif message.topic == "display/get_size":
+    display.send_size()
 
-#broker_address="10.0.0.17"
-broker_address="raspberrypi_glenn"
+broker_address="10.0.0.17"
+#broker_address="raspberrypi_glenn"
 client = mqtt.Client("dual_display")
 client.on_message=on_message
 try:
@@ -201,6 +204,7 @@ except:
 client.loop_start()
 client.subscribe("audio/#")
 client.subscribe("display/freq/#")
+client.subscribe("display/get_size")
 
 display.set_client(client)
 display.send_size()
