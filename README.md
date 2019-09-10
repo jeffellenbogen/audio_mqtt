@@ -34,11 +34,13 @@ matrix_columns = 64
 num_hor = 1
 num_vert = 1
 ```
-This will then set the appropriate variables inside of our Screen class and send them over to the microphone. 
+This will then set the appropriate variables inside of our Screen class and send them over to the microphone via the `display/columns` and `display/rows` messages.
 
 ### Microphone side
 The mic application samples a chunck of 1024 concurrent samples at 44.1 KHz.
 We'll send only enough samples to fill the total number of columns on the display.
+
+Note that if the microphone starts before the display, all is good, as the display will send us over the number of columns and rows when it starts up.  However, if the display is running first, we need some way for the microphone to query that display size.  It does so via the `display/get_size` message.
 
 The `display/time/y_ctl` topic will either zoom in or zoom out in the y dimention (magnitude) depending on whether the payload is a + or -.  Note that we can send a bigger number than the display can show, but the display will bound that number.
 
@@ -48,7 +50,8 @@ The `display/time/x_ctl` topic deals with the time (or x) dimension.  At the min
 ### Display side
 The main parameter for frequency on the display side is the number of pixels per frequency "bin".  We can set this through MQTT with the topic `display/freq/pixels_per_bin`
 
-Note that the number of frequency bins displayed is the number of total rows divided by the bin size in pixels.  We'll send this info over to the mic as `display/freq/num_bins`.  This should only be sent by the display program.
+Note that the number of frequency bins displayed is the number of total rows divided by the bin size in pixels.  We'll send this info over to the mic as `display/freq/num_bins`.  This should only be sent by the display program.  Note it does so (along with the aforementioned rows and columns) either on boot or in response to a `display/get_size` message.
+
 ### Microphone side
 On the Mic side, we start by doing a raw FFT of our input samples.  We'll only send over the number of frequency bins that the display requests.  
 
