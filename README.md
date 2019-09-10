@@ -10,6 +10,21 @@ To make these work, you need to install Mosquitto (see my notes at https://githu
 
 By default, MQTT is pointing at the mosquitto server on localhost.  If you want it to point somewhere else, make a "broker.conf" file that contains only one line: the desired hostname or ip address.  
 
+# Public API
+## vs Time Display (top)
+| MQTT Topic | Payload | Description |
+|---|---|---|
+| display/time/x_ctl | "+" or "-" | Zooms in or out on the x-axis (time) |
+| display/time/y_ctl | "+" or "-" | Zooms in or out on the y-axis (magnitude) |
+
+## vs Frequency Display (bottom)
+| MQTT Topic | Payload | Description |
+|---|---|---|
+| display/freq/pixels_per_bin | number | Sets the number of pixels per frequency bin for the frequency display.  Fewer pixels-per-bin means you can look at a wider frequency range, as more "bins" will fit on the screen |
+| display/freq/y_ctl | "+" or "-" | Scales the y axis (magnitude) of all frequency bins |
+| display/freq/num_pts_per_bin | number | This sets the number of frequency points that go into each frequency bin.  More points per bin means each bin contains more frequencies (eg is wider) and therefore you can span a longer frequency range |
+  
+# Design notes
 ## Time scaling notes
 ### Display side
 In the display application, total_columns will tell the width of the display.  It's initialized by setting the following variables at the bottom of dual_client.py:
