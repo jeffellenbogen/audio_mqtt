@@ -1,4 +1,4 @@
-# Doing audio between a mic and display over MQTT
+# An MQTT-based audio visualizer
 
 This repo contains the code to visualize sound data.  There are two sides:
 * mic_full.py - the microphone program which samples the sound over USB
