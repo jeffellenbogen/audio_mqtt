@@ -3,6 +3,8 @@ import time
 
 import paho.mqtt.client as mqtt
 
+import broker
+
 ###################################
 # Graphics imports, constants and structures
 ###################################
@@ -219,8 +221,8 @@ def on_message(client, userdata, message):
   else:
     print "unknown topic: "+message.topic
 
-broker_address="10.0.0.17"
-#broker_address="makerlabPi1"
+broker_address = broker.read()
+
 client = mqtt.Client("dual_display")
 client.on_message=on_message
 try:

@@ -13,6 +13,8 @@ import numpy as np
 import paho.mqtt.client as mqtt
 import time
 
+import broker
+
 CHUNK = 1024 
 FORMAT = pyaudio.paInt16
 CHANNELS = 1
@@ -113,8 +115,7 @@ def on_message(client, userdata, message):
     print("Unknown message on display topic:"+message.topic)
     print("Payload: "+message.payload)
 
-broker_address="10.0.0.17"
-#broker_address="makerlabPi1"
+broker_address = broker.read()
 client = mqtt.Client("Microphone")
 client.on_message=on_message
 try:
