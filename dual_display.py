@@ -60,8 +60,18 @@ class Screen():
   # set_y_spread
   ###############################################
   def set_y_spread(self, y_thickness):
-    if y_thickness >= 0 and y_thickness<=4:
-      self.y_spread = y_thickness 
+    min_y_spread = 1
+    max_y_spread = 3
+    if y_thickness == "+":
+      if self.y_spread<max_y_spread:
+        self.y_spread+=1
+    elif y_thickness == "-":
+      if self.y_spread>min_y_spread:
+        self.y_spread-=1
+    else:
+      y_thickness = int(y_thickness)
+      if y_thickness >= min_y_spread and y_thickness<=max_y_spread:
+        self.y_spread = y_thickness 
 
 
   ############################################
@@ -212,7 +222,7 @@ def on_message(client, userdata, message):
     display.set_time_color(int(message.payload))
   elif message.topic == "display/time/y_spread":
     print "y_spread change "+message.payload
-    display.set_y_spread(int(message.payload))
+    display.set_y_spread(message.payload)
   else:
     print "unknown topic: "+message.topic
 
