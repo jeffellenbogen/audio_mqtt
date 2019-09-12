@@ -133,7 +133,7 @@ class Screen():
     self.draw.rectangle((0,0,self.total_columns, self.total_rows/2),(0,0,0))
 
     last_x = 0
-    last_y = self.total_rows / 4
+    last_y = sound_data[0]
 
     time_color ="hsl({}, 100%, 50%)".format(self.color) 
     
