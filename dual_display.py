@@ -244,7 +244,7 @@ def on_message(client, userdata, message):
     print "increase courseness "+message.payload
     display.send_inc_courseness(message.payload) 
   elif message.topic == "display/freq/dec_courseness":
-    print "increase courseness "+message.payload
+    print "decrease courseness "+message.payload
     display.send_dec_courseness(message.payload)        
   else:
     print "unknown topic: "+message.topic
