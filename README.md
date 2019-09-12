@@ -58,3 +58,11 @@ On the Mic side, we start by doing a raw FFT of our input samples.  We'll only s
 Inside each frequency bin, we can combine FFT points to make the bins "wider" (in frequency, not in pixels).  This can be controlled with `display/freq/num_pts_per_bin`.
 
 In addition, we can change the y axis scaling of the raw FFT output via the `display/freq/y_ctl` topic.  + zooms in, - zooms out.
+
+## Coming soon...
+| MQTT Topic | Payload | Description |
+|---|---|---|
+| display/time/trigger_ctl | "on" or "off" | Turns on or off triggering for the time display |
+| display/time/trigger_level | number | Sets the trigger level to that number of pixels above our "bias" level. |
+
+If the trigger never fires, we need to not hang the mic...just do the next chunk process without sending audio data.  Can still send frequency data.
