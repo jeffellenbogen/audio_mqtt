@@ -139,7 +139,7 @@ class Screen():
       new_x = last_x + 1 
       new_y = sound_data[data_index] 
       #self.draw.line((last_x, last_y - self.y_spread, last_x, last_y + self.y_spread),fill=time_color) 
-      self.draw.line((last_x, last_y, new_x, new_y + self.y_spread),fill=time_color) 
+      self.draw.line((last_x, last_y, new_x, new_y), width = y_spread, fill=time_color) 
       last_x = new_x
       last_y = new_y
 
