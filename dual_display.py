@@ -133,7 +133,7 @@ class Screen():
   #   broadcasts message to increase courseness of bars 
   ###############################################
   def send_inc_courseness(self):
-    self.client.publish("display/freq/num_bins", round(str(self.num_freq_bins)/2))
+    self.client.publish("display/freq/num_bins", str(round(self.num_freq_bins)/2))
     self.client.publish("display/freq/pixels_per_bin", str(self.num_pixels_per_freq_bin)*2)    
 
   ############################################
@@ -141,8 +141,8 @@ class Screen():
   #   broadcasts message to increase courseness of bars 
   ###############################################
   def send_dec_courseness(self):
-    self.client.publish("display/freq/num_bins", round(str(self.num_pixels_per_freq_bin)/2))
-    self.client.publish("display/freq/pixels_per_bin", str(self.num_freq_bins)*2)    
+    self.client.publish("display/freq/pixels_per_bin", str(round(self.num_pixels_per_freq_bin)/2))
+    self.client.publish("display/freq/num_bins", str(self.num_freq_bins)*2)    
 
   ############################################
   # show time data 
@@ -241,11 +241,11 @@ def on_message(client, userdata, message):
     print "y_spread change "+message.payload
     display.set_y_spread(message.payload)
   elif message.topic == "display/freq/inc_courseness":
-    print "increase courseness "+message.payload
-    display.send_inc_courseness(message.payload) 
+    print "increase courseness "
+    display.send_inc_courseness() 
   elif message.topic == "display/freq/dec_courseness":
-    print "decrease courseness "+message.payload
-    display.send_dec_courseness(message.payload)        
+    print "decrease courseness "
+    display.send_dec_courseness()        
   else:
     print "unknown topic: "+message.topic
 
