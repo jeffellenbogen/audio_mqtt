@@ -47,10 +47,10 @@ def send_inc_courseness():
   num_freq_bins_string = str((num_freq_bins)/2)
   print "the next line is the num_freq_bins_string"
   print num_freq_bins_string
-  freq_pts_per_bin_string = str(freq_pts_per_bin*2)
+  freq_pts_per_bin_string = str(freq_points_per_bin*2)
   print "debug"
-  #client.publish("display/freq/num_bins", str(round(num_freq_bins)/2))
-  #client.publish("display/freq/num_pts_per_bin", str(freq_pts_per_bin)*2)    
+  client.publish("display/freq/num_bins", str(round(num_freq_bins)/2))
+  client.publish("display/freq/num_pts_per_bin", str(freq_points_per_bin)*2)    
 
 ############################################
 # send_dec_courseness
