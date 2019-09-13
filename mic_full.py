@@ -43,6 +43,7 @@ def send_inc_courseness():
   global client
   global num_freq_bins 
   global freq_pts_per_bin
+  print "increasing courseness NOW"
   client.publish("display/freq/num_bins", str(round(num_freq_bins)/2))
   client.publish("display/freq/num_pts_per_bin", str(freq_pts_per_bin)*2)    
 
@@ -54,6 +55,7 @@ def send_dec_courseness():
   global client
   global num_freq_bins 
   global freq_pts_per_bin
+  print "decreasing courseness NOW"
   client.publish("display/freq/num_pts_per_bin", str(round(freq_pts_per_bin)/2))
   client.publish("display/freq/num_bins", str(num_freq_bins)*2)    
 
@@ -153,6 +155,7 @@ except:
 
 client.loop_start()
 client.subscribe("display/#")
+
 
 try:
   print("Hit ctl-c to exit")
