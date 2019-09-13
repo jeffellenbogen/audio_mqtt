@@ -40,7 +40,9 @@ sample_bias = total_rows / 2
 #   broadcasts message to increase courseness of bars 
 ###############################################
 def send_inc_courseness():
-  global client, num_freq_bins, freq_pts_per_bin
+  global client
+  global num_freq_bins 
+  global freq_pts_per_bin
   client.publish("display/freq/num_bins", str(round(num_freq_bins)/2))
   client.publish("display/freq/num_pts_per_bin", str(freq_pts_per_bin)*2)    
 
@@ -49,7 +51,9 @@ def send_inc_courseness():
 #   broadcasts message to increase courseness of bars 
 ###############################################
 def send_dec_courseness():
-  global client, num_freq_bins, freq_pts_per_bin
+  global client
+  global num_freq_bins 
+  global freq_pts_per_bin
   client.publish("display/freq/num_pts_per_bin", str(round(freq_pts_per_bin)/2))
   client.publish("display/freq/num_bins", str(num_freq_bins)*2)    
 
