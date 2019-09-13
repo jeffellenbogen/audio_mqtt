@@ -45,6 +45,7 @@ def send_inc_courseness():
   global freq_pts_per_bin
   print "increasing courseness NOW"
   num_freq_bins_string = str((num_freq_bins)/2)
+  print "the next line is the num_freq_bins_string"
   print num_freq_bins_string
   freq_pts_per_bin_string = str((freq_pts_per_bin)*2)
   print "debug"
