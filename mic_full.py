@@ -35,6 +35,25 @@ total_rows = 32
 total_columns = 32
 sample_bias = total_rows / 2 
 
+############################################
+# send_inc_courseness
+#   broadcasts message to increase courseness of bars 
+###############################################
+def send_inc_courseness():
+  global client, num_freq_bins, freq_pts_per_bin
+  client.publish("display/freq/num_bins", str(round(num_freq_bins)/2))
+  client.publish("display/freq/num_pts_per_bin", str(freq_pts_per_bin)*2)    
+
+############################################
+# send_dec_courseness
+#   broadcasts message to increase courseness of bars 
+###############################################
+def send_dec_courseness():
+  global client, num_freq_bins, freq_pts_per_bin
+  client.publish("display/freq/num_pts_per_bin", str(round(freq_pts_per_bin)/2))
+  client.publish("display/freq/num_bins", str(num_freq_bins)*2)    
+
+
 def on_message(client, userdata, message):
   global total_rows
   global total_columns
@@ -108,7 +127,12 @@ def on_message(client, userdata, message):
   elif message.topic == "display/freq/num_pts_per_bin":
     freq_points_per_bin = int(message.payload)
     print "Setting freq_points_per_bin to "+message.payload
-
+  elif message.topic == "display/freq/inc_courseness":
+    print "increase courseness "
+    send_inc_courseness() 
+  elif message.topic == "display/freq/dec_courseness":
+    print "decrease courseness "
+    send_dec_courseness() 
   else:
     print("Unknown message on display topic:"+message.topic)
     print("Payload: "+message.payload)
