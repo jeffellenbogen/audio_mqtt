@@ -50,7 +50,7 @@ def send_inc_courseness():
   freq_pts_per_bin_string = str(freq_points_per_bin*2)
   print "debug"
   client.publish("display/freq/num_bins", str(round(num_freq_bins)/2))
-  client.publish("display/freq/num_pts_per_bin", str(freq_points_per_bin)*2)    
+  client.publish("display/freq/num_pts_per_bin", str(freq_points_per_bin*2))   
 
 ############################################
 # send_dec_courseness
@@ -62,7 +62,7 @@ def send_dec_courseness():
   global freq_pts_per_bin
   print "decreasing courseness NOW"
   client.publish("display/freq/num_pts_per_bin", str(round(freq_pts_per_bin)/2))
-  client.publish("display/freq/num_bins", str(num_freq_bins)*2)    
+  client.publish("display/freq/num_bins", str(num_freq_bins*2))   
 
 
 def on_message(client, userdata, message):
