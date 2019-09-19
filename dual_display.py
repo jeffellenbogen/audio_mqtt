@@ -3,6 +3,8 @@ import time
 
 import paho.mqtt.client as mqtt
 
+import broker
+
 ###################################
 # Graphics imports, constants and structures
 ###################################
@@ -123,6 +125,7 @@ class Screen():
   #   broadcasts the display size 
   ###############################################
   def send_size(self):
+    print "Sending Display Size" 
     self.client.publish("display/columns", str(self.total_columns))
     self.client.publish("display/rows", str(self.total_rows/2)) 
     self.client.publish("display/freq/num_bins", str(self.num_freq_bins))
@@ -141,7 +144,7 @@ class Screen():
     self.draw.rectangle((0,0,self.total_columns, self.total_rows/2),(0,0,0))
 
     last_x = 0
-    last_y = self.total_rows / 4
+    last_y = sound_data[0]
 
     time_color ="hsl({}, 100%, 50%)".format(self.color) 
     
@@ -194,10 +197,10 @@ class Screen():
 
     self.matrix.SetImage(self.screen,0,0)
 
-matrix_rows = 32
-matrix_columns = 32
-num_hor = 5
-num_vert = 3
+matrix_rows = 64 
+matrix_columns = 64 
+num_hor = 1
+num_vert = 1
 
 display = Screen(matrix_rows, matrix_columns, num_hor, num_vert)
 
@@ -223,12 +226,14 @@ def on_message(client, userdata, message):
     display.set_time_color(int(message.payload))
   elif message.topic == "display/time/y_spread":
     print "y_spread change "+message.payload
-    display.set_y_spread(message.payload)       
+    display.set_y_spread(int(message.payload))
+  elif message.topic == "display/get_size":
+    display.send_size()
   else:
     print "unknown topic: "+message.topic
 
-#broker_address="10.0.0.17"
-broker_address="makerlabPi1"
+broker_address = broker.read()
+
 client = mqtt.Client("dual_display")
 client.on_message=on_message
 try:
@@ -239,7 +244,8 @@ except:
 
 client.loop_start()
 client.subscribe("audio/#")
-client.subscribe("display/freq/#")
+client.subscribe("display/freq/pixels_per_bin")
+client.subscribe("display/get_size")
 client.subscribe("display/time/color")
 client.subscribe("display/time/y_spread")
 
